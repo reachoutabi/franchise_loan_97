@@ -1,5 +1,5 @@
 /**
- * EquiFund Capital - Storage & Mock Database Engine
+ * EquiCapital - Storage & Mock Database Engine
  * Centralized LocalStorage API, Seed Data, and Session Management
  */
 
@@ -22,8 +22,8 @@ const STORAGE_KEYS = {
 const DEMO_USER = {
   id: 'usr-98102',
   name: 'Alexander Vance',
-  email: 'client@equifund-demo.com',
-  password: 'Client@123',
+  email: 'user@equicapital.com',
+  password: '1234',
   phone: '+1 (555) 382-9104',
   businessName: 'Vance Heavy Hauling & Excavation LLC',
   entityType: 'Limited Liability Company (LLC)',
@@ -35,8 +35,8 @@ const DEMO_USER = {
   assignedBroker: {
     name: 'David Vance',
     title: 'Senior Commercial Finance Advisor',
-    email: 'd.vance@equifundcapital.com',
-    phone: '+1 (800) 582-4190 ext. 204',
+    email: 'd.vance@equicapital.com',
+    phone: '+1 (800) 582-4190 x204',
     avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=256&q=80'
   }
 };
@@ -411,22 +411,64 @@ class EquiFundStorage {
   // User & Auth
   getCurrentUser() {
     const raw = localStorage.getItem(STORAGE_KEYS.USER);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) {
+      // Default to DEMO_USER so dashboard is immediately accessible without requiring sign in
+      return DEMO_USER;
+    }
+    try {
+      const u = JSON.parse(raw);
+      let changed = false;
+      if (u?.assignedBroker?.email && u.assignedBroker.email.includes('equifund')) {
+        u.assignedBroker.email = u.assignedBroker.email.replace(/equifund(capital)?\.com/g, 'equicapital.com');
+        changed = true;
+      }
+      if (u?.assignedBroker?.phone && u.assignedBroker.phone.includes('ext.')) {
+        u.assignedBroker.phone = u.assignedBroker.phone.replace('ext.', 'x');
+        changed = true;
+      }
+      if (changed) {
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(u));
+      }
+      return u;
+    } catch {
+      return DEMO_USER;
+    }
   }
 
   login(email, password) {
     const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS_LIST) || '[]');
-    const matched = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    const matched = users.find(u => u.email.toLowerCase() === (email || '').trim().toLowerCase() && u.password === password);
     if (matched) {
       localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(matched));
       return { success: true, user: matched };
     }
-    // Also allow the standard demo credentials
-    if (email.toLowerCase() === DEMO_USER.email.toLowerCase() && password === DEMO_USER.password) {
-      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(DEMO_USER));
-      return { success: true, user: DEMO_USER };
+    // Also allow default and demo credentials
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanPass = (password || '').trim();
+    if (
+      (cleanEmail === 'user@equicapital.com' && cleanPass === '1234') ||
+      (cleanEmail === DEMO_USER.email.toLowerCase() && cleanPass === DEMO_USER.password) ||
+      (cleanEmail === 'client@equicapital-demo.com' && (cleanPass === '1234' || cleanPass === 'Client@123')) ||
+      (cleanEmail === 'client@equifund-demo.com' && (cleanPass === '1234' || cleanPass === 'Client@123'))
+    ) {
+      const activeUser = {
+        ...DEMO_USER,
+        email: cleanEmail === 'user@equicapital.com' ? 'user@equicapital.com' : DEMO_USER.email
+      };
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(activeUser));
+      return { success: true, user: activeUser };
     }
-    return { success: false, message: 'Invalid email or password. Try the demo credentials: client@equifund-demo.com / Client@123' };
+    return { success: false, message: 'Invalid credentials. Default login: user@equicapital.com / 1234' };
+  }
+
+  loginWithSSO(provider = 'Google') {
+    const ssoUser = {
+      ...DEMO_USER,
+      email: 'user@equicapital.com',
+      authProvider: provider
+    };
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(ssoUser));
+    return { success: true, user: ssoUser, provider };
   }
 
   register(userData) {
@@ -521,7 +563,7 @@ class EquiFundStorage {
     // Add notification
     this.addNotification(
       'Application Submitted Successfully',
-      `Application ${newId} for $${newApp.amount.toLocaleString()} was received. Review has begun.`,
+      `Application ${newId} for $${newApp.amount.toLocaleString('en-US')} was received. Review has begun.`,
       'status'
     );
 
@@ -630,7 +672,7 @@ class EquiFundStorage {
     if (app) {
       app.status = 'Closing in Progress';
       app.stageNumber = 4;
-      app.brokerNotes = `Client accepted ${offer.lenderName} term sheet ($${offer.amount.toLocaleString()} at ${offer.apr}% APR). Closing docs dispatched.`;
+      app.brokerNotes = `Client accepted ${offer.lenderName} term sheet ($${offer.amount.toLocaleString('en-US')} at ${offer.apr}% APR). Closing docs dispatched.`;
       localStorage.setItem(STORAGE_KEYS.APPLICATIONS, JSON.stringify(apps));
     }
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Client Funding Portal & Dashboard | EquiFund Capital</title>
+  <title>Client Funding Portal & Dashboard | EquiCapital</title>
   <meta name="description" content="Commercial loan and equipment financing dashboard. Track real-time underwriting stages, upload documents, review lender offers, and manage business credit facilities.">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" href="favicon.ico">
@@ -109,7 +109,7 @@
           </div>
           <div>
             <span class="font-heading text-base font-bold tracking-tight text-slate-900 dark:text-white block leading-none">
-              EquiFund<span class="text-emerald-500">Capital</span>
+              Equi<span class="text-emerald-500">Capital</span>
             </span>
             <span class="text-[9px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-400 block mt-1">
               COMMERCIAL FINANCE BROKER
@@ -203,17 +203,17 @@
         </button>
 
         <!-- Search Bar -->
-        <div class="relative w-48 sm:w-72">
+        <div class="relative w-28 xs:w-36 sm:w-64 md:w-72">
           <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-sm">
             <i class="bi bi-search"></i>
           </span>
-          <input type="text" id="dashboard-topbar-search" placeholder="Search applications, docs..." 
-                 class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs pl-9 pr-3 py-2 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500">
+          <input type="text" id="dashboard-topbar-search" placeholder="Search..." 
+                 class="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs pl-8 sm:pl-9 pr-2 sm:pr-3 py-1.5 sm:py-2 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500">
         </div>
       </div>
 
       <!-- Topbar Utilities -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 sm:gap-3">
         
         <!-- Reviewer Demo Status Simulator Button -->
         <button id="demo-simulate-status-btn" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold hover:bg-amber-500/20 transition-colors" title="Demo Tool: Advance status of application">
@@ -241,7 +241,7 @@
           </button>
 
           <!-- Notification Dropdown Panel -->
-          <div id="notif-dropdown-panel" class="absolute right-0 mt-3 w-80 sm:w-96 glass-card rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 hidden z-50 overflow-hidden">
+          <div id="notif-dropdown-panel" class="absolute right-0 mt-3 w-72 sm:w-80 md:w-96 max-w-[calc(100vw-2rem)] glass-card rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 hidden z-50 overflow-hidden">
             <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
               <span class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Notifications</span>
               <button id="notif-mark-read-btn" class="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold hover:underline">
@@ -268,6 +268,14 @@
         
         <!-- Welcome Header Banner -->
         <div class="glass-card rounded-3xl p-6 sm:p-8 bg-emerald-600 text-white shadow-xl relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <!-- Ambient Glow Orb & Tech Accent -->
+          <div class="hero-glow-blob hero-blob-1 !w-96 !h-96 !-top-20 !-right-20 !bg-white/20 pointer-events-none"></div>
+          <!-- Subtle Hero Equipment Graphic Accent -->
+          <div class="absolute right-0 top-0 bottom-0 w-1/2 opacity-15 pointer-events-none overflow-hidden hidden md:block">
+            <img src="images/hero-equipment.jpg" alt="" class="w-full h-full object-cover object-center filter contrast-125">
+            <div class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-transparent"></div>
+          </div>
+
           <div class="relative z-10 space-y-2">
             <span class="text-xs font-bold uppercase tracking-wider bg-white/20 px-3 py-1 rounded-full text-white inline-block">
               Underwriting Dashboard
@@ -344,16 +352,16 @@
         </div>
 
         <!-- Pipeline Bar Chart & Assigned Broker Card -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start">
           
           <!-- Pipeline Chart -->
-          <div class="lg:col-span-8 glass-card rounded-3xl p-6 sm:p-8">
+          <div class="lg:col-span-7 xl:col-span-8 glass-card rounded-3xl p-6 sm:p-8">
             <div class="flex items-center justify-between mb-4">
               <div>
                 <h4 class="font-bold text-base text-slate-900 dark:text-white">Application Pipeline Distribution</h4>
                 <p class="text-xs text-slate-500">Distribution of your commercial requests by underwriting phase.</p>
               </div>
-              <button class="text-xs text-emerald-500 font-bold" onclick="dashboard.switchView('applications')">
+              <button class="text-xs text-emerald-500 font-bold hover:underline" onclick="dashboard.switchView('applications')">
                 View All &rarr;
               </button>
             </div>
@@ -363,26 +371,40 @@
           </div>
 
           <!-- Assigned Broker Card -->
-          <div class="lg:col-span-4 glass-card rounded-3xl p-6 space-y-5">
+          <div class="lg:col-span-5 xl:col-span-4 glass-card rounded-3xl p-6 space-y-5">
             <span class="text-xs uppercase font-bold tracking-wider text-emerald-600 dark:text-emerald-400 block">
               Dedicated Financial Broker
             </span>
 
             <div class="flex items-center gap-3.5">
               <img id="overview-broker-avatar" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=256&q=80" 
-                   alt="David Vance" class="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-500">
-              <div>
-                <h4 id="overview-broker-name" class="font-bold text-base text-slate-900 dark:text-white">David Vance</h4>
-                <p id="overview-broker-title" class="text-xs text-slate-500">Senior Commercial Advisor</p>
-                <div class="flex items-center gap-1 text-[11px] text-emerald-500 font-semibold mt-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Online &bull; Direct Line
+                   alt="David Vance" class="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-500 shrink-0">
+              <div class="min-w-0">
+                <h4 id="overview-broker-name" class="font-bold text-base text-slate-900 dark:text-white truncate">David Vance</h4>
+                <p id="overview-broker-title" class="text-xs text-slate-500 truncate">Senior Commercial Advisor</p>
+                <div class="flex items-center gap-1.5 text-[11px] text-emerald-500 font-semibold mt-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span> <span class="truncate">Online &bull; Direct Line</span>
                 </div>
               </div>
             </div>
 
-            <div class="space-y-2 text-xs border-y border-slate-100 dark:border-slate-800 py-3.5">
-              <div class="flex justify-between"><span class="text-slate-500">Direct Phone:</span> <strong id="overview-broker-phone" class="text-slate-800 dark:text-slate-200">+1 (800) 582-4190 x204</strong></div>
-              <div class="flex justify-between"><span class="text-slate-500">Email:</span> <strong id="overview-broker-email" class="text-slate-800 dark:text-slate-200">d.vance@equifund.com</strong></div>
+            <div class="space-y-3 text-xs border-y border-slate-100 dark:border-slate-800 py-3.5">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-slate-500 dark:text-slate-400 font-medium shrink-0 whitespace-nowrap flex items-center gap-1.5">
+                  <i class="bi bi-telephone text-emerald-600 dark:text-emerald-400 text-xs"></i> Direct Phone:
+                </span>
+                <a href="tel:+18005824190" id="overview-broker-phone" class="text-slate-800 dark:text-slate-200 font-bold hover:text-emerald-500 transition-colors text-right whitespace-nowrap shrink-0">
+                  +1 (800) 582-4190 x204
+                </a>
+              </div>
+              <div class="flex items-center justify-between gap-2 min-w-0">
+                <span class="text-slate-500 dark:text-slate-400 font-medium shrink-0 whitespace-nowrap flex items-center gap-1.5">
+                  <i class="bi bi-envelope text-emerald-600 dark:text-emerald-400 text-xs"></i> Email:
+                </span>
+                <a href="mailto:d.vance@equicapital.com" id="overview-broker-email" class="text-slate-800 dark:text-slate-200 font-bold hover:text-emerald-500 transition-colors text-right truncate min-w-0" title="d.vance@equicapital.com">
+                  d.vance@equicapital.com
+                </a>
+              </div>
             </div>
 
             <div class="space-y-2">
@@ -406,9 +428,14 @@
         
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <span class="text-xs uppercase font-bold tracking-wider text-emerald-600 dark:text-emerald-400 block mb-1">
-              Commercial Credit Intake
-            </span>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs uppercase font-bold tracking-wider text-emerald-600 dark:text-emerald-400">
+                Commercial Credit Intake
+              </span>
+              <span id="wizard-progress-pill" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-all duration-300">
+                Step 1 of 6 &bull; 17% Complete
+              </span>
+            </div>
             <h2 class="text-2xl font-extrabold font-heading text-slate-900 dark:text-white">
               Commercial Loan Application Wizard
             </h2>
@@ -420,41 +447,57 @@
 
         <!-- 6-Node Stepper Progress Indicator -->
         <div class="glass-card rounded-2xl p-4 sm:p-6 overflow-x-auto">
-          <div class="flex items-center justify-between min-w-[550px]">
+          <div class="flex items-center justify-between min-w-0 md:min-w-[620px] gap-1 sm:gap-2">
             
-            <div class="flex items-center gap-2">
-              <div id="wizard-step-node-1" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-emerald-500 text-white shadow-glow">1</div>
-              <span class="text-xs font-bold text-slate-800 dark:text-slate-200">1. Solution</span>
+            <!-- Step 1: Solution -->
+            <div id="wizard-step-item-1" class="wizard-step-item is-clickable flex items-center gap-2 cursor-pointer transition-all" onclick="dashboard.jumpToWizardStep(1)" title="Step 1: Solution">
+              <div id="wizard-step-node-1" class="wizard-node w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-emerald-500 text-white shadow-glow ring-4 ring-emerald-500/25 is-active">1</div>
+              <span id="wizard-step-label-1" class="wizard-label text-xs font-bold text-slate-900 dark:text-white is-active">1. Solution</span>
             </div>
-            <div class="w-8 h-0.5 bg-slate-200 dark:bg-slate-700"></div>
-
-            <div class="flex items-center gap-2">
-              <div id="wizard-step-node-2" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-500">2</div>
-              <span class="text-xs font-bold text-slate-500">2. Business</span>
+            <div class="wizard-line-track flex-1 min-w-[20px] max-w-[48px] h-1 bg-slate-200 dark:bg-slate-700/80 rounded-full overflow-hidden mx-1 sm:mx-2">
+              <div id="wizard-step-line-1" class="wizard-line-fill h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
             </div>
-            <div class="w-8 h-0.5 bg-slate-200 dark:bg-slate-700"></div>
 
-            <div class="flex items-center gap-2">
-              <div id="wizard-step-node-3" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-500">3</div>
-              <span class="text-xs font-bold text-slate-500">3. Equipment</span>
+            <!-- Step 2: Business -->
+            <div id="wizard-step-item-2" class="wizard-step-item flex items-center gap-2 transition-all" onclick="dashboard.jumpToWizardStep(2)" title="Step 2: Business">
+              <div id="wizard-step-node-2" class="wizard-node w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-500">2</div>
+              <span id="wizard-step-label-2" class="wizard-label text-xs font-bold text-slate-500">2. Business</span>
             </div>
-            <div class="w-8 h-0.5 bg-slate-200 dark:bg-slate-700"></div>
-
-            <div class="flex items-center gap-2">
-              <div id="wizard-step-node-4" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-500">4</div>
-              <span class="text-xs font-bold text-slate-500">4. Owner</span>
+            <div class="wizard-line-track flex-1 min-w-[20px] max-w-[48px] h-1 bg-slate-200 dark:bg-slate-700/80 rounded-full overflow-hidden mx-1 sm:mx-2">
+              <div id="wizard-step-line-2" class="wizard-line-fill h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
             </div>
-            <div class="w-8 h-0.5 bg-slate-200 dark:bg-slate-700"></div>
 
-            <div class="flex items-center gap-2">
-              <div id="wizard-step-node-5" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-500">5</div>
-              <span class="text-xs font-bold text-slate-500">5. Docs</span>
+            <!-- Step 3: Equipment -->
+            <div id="wizard-step-item-3" class="wizard-step-item flex items-center gap-2 transition-all" onclick="dashboard.jumpToWizardStep(3)" title="Step 3: Equipment">
+              <div id="wizard-step-node-3" class="wizard-node w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-500">3</div>
+              <span id="wizard-step-label-3" class="wizard-label text-xs font-bold text-slate-500">3. Equipment</span>
             </div>
-            <div class="w-8 h-0.5 bg-slate-200 dark:bg-slate-700"></div>
+            <div class="wizard-line-track flex-1 min-w-[20px] max-w-[48px] h-1 bg-slate-200 dark:bg-slate-700/80 rounded-full overflow-hidden mx-1 sm:mx-2">
+              <div id="wizard-step-line-3" class="wizard-line-fill h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+            </div>
 
-            <div class="flex items-center gap-2">
-              <div id="wizard-step-node-6" class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-500">6</div>
-              <span class="text-xs font-bold text-slate-500">6. Submit</span>
+            <!-- Step 4: Owner -->
+            <div id="wizard-step-item-4" class="wizard-step-item flex items-center gap-2 transition-all" onclick="dashboard.jumpToWizardStep(4)" title="Step 4: Owner">
+              <div id="wizard-step-node-4" class="wizard-node w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-500">4</div>
+              <span id="wizard-step-label-4" class="wizard-label text-xs font-bold text-slate-500">4. Owner</span>
+            </div>
+            <div class="wizard-line-track flex-1 min-w-[20px] max-w-[48px] h-1 bg-slate-200 dark:bg-slate-700/80 rounded-full overflow-hidden mx-1 sm:mx-2">
+              <div id="wizard-step-line-4" class="wizard-line-fill h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+            </div>
+
+            <!-- Step 5: Docs -->
+            <div id="wizard-step-item-5" class="wizard-step-item flex items-center gap-2 transition-all" onclick="dashboard.jumpToWizardStep(5)" title="Step 5: Docs">
+              <div id="wizard-step-node-5" class="wizard-node w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-500">5</div>
+              <span id="wizard-step-label-5" class="wizard-label text-xs font-bold text-slate-500">5. Docs</span>
+            </div>
+            <div class="wizard-line-track flex-1 min-w-[20px] max-w-[48px] h-1 bg-slate-200 dark:bg-slate-700/80 rounded-full overflow-hidden mx-1 sm:mx-2">
+              <div id="wizard-step-line-5" class="wizard-line-fill h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+            </div>
+
+            <!-- Step 6: Submit -->
+            <div id="wizard-step-item-6" class="wizard-step-item flex items-center gap-2 transition-all" onclick="dashboard.jumpToWizardStep(6)" title="Step 6: Submit">
+              <div id="wizard-step-node-6" class="wizard-node w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-500">6</div>
+              <span id="wizard-step-label-6" class="wizard-label text-xs font-bold text-slate-500">6. Submit</span>
             </div>
 
           </div>
@@ -696,7 +739,7 @@
               <label class="flex items-start gap-2.5 text-xs text-slate-700 dark:text-slate-300 cursor-pointer">
                 <input type="checkbox" id="wizard-consent-check" checked class="mt-0.5 rounded text-emerald-500 focus:ring-emerald-400">
                 <span class="leading-relaxed">
-                  I certify that all information submitted is accurate and represents active commercial business operations. I authorize EquiFund and its syndicate partners to perform a soft credit check and verify banking deposits.
+                  I certify that all information submitted is accurate and represents active commercial business operations. I authorize EquiCapital and its syndicate partners to perform a soft credit check and verify banking deposits.
                 </span>
               </label>
             </div>
@@ -1006,7 +1049,7 @@
           <div class="lg:col-span-4 glass-card rounded-3xl p-6 space-y-5">
             <h4 class="font-bold text-base text-slate-900 dark:text-white">Reviewer Demo Controls</h4>
             <p class="text-xs text-slate-500 leading-relaxed">
-              EquiFund uses client-side LocalStorage for zero-backend operation. You can restore the clean seed state at any time.
+              EquiCapital uses client-side LocalStorage for zero-backend operation. You can restore the clean seed state at any time.
             </p>
             <div class="space-y-3 pt-2">
               <button id="settings-reset-demo-btn" class="btn-secondary w-full text-xs py-2.5 text-amber-600 dark:text-amber-400 border-amber-300">

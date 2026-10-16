@@ -1,5 +1,5 @@
 /**
- * EquiFund Capital - Financial Calculator Engine
+ * EquiCapital - Financial Calculator Engine
  * Comprehensive Loan, Lease, Working Capital & Affordability Math with Chart.js Integration
  */
 
@@ -29,7 +29,19 @@ class LoanCalculatorEngine {
     this.bindTabs();
     this.bindTaxShield();
     this.bindActions();
-    this.calculate();
+
+    // Check URL parameters for preset mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const typeParam = urlParams.get('type') || urlParams.get('mode') || urlParams.get('solution');
+    if (typeParam === 'lease' || typeParam === 'equipment-lease') {
+      this.setMode('equipment-lease');
+    } else if (typeParam === 'working-capital' || typeParam === 'capital') {
+      this.setMode('working-capital');
+    } else if (typeParam === 'affordability') {
+      this.setMode('affordability');
+    } else {
+      this.calculate();
+    }
 
     // Listen to theme change to re-color charts
     window.addEventListener('themeChanged', () => {
@@ -77,9 +89,9 @@ class LoanCalculatorEngine {
     const elNetPct = document.getElementById('tax-net-pct');
     const elSavingsPct = document.getElementById('tax-savings-pct');
 
-    if (elDeduction) elDeduction.textContent = this.currencySymbol + Math.round(deduction).toLocaleString();
-    if (elSavings) elSavings.textContent = this.currencySymbol + Math.round(savings).toLocaleString();
-    if (elNetCost) elNetCost.textContent = this.currencySymbol + Math.round(netCost).toLocaleString();
+    if (elDeduction) elDeduction.textContent = this.currencySymbol + Math.round(deduction).toLocaleString('en-US');
+    if (elSavings) elSavings.textContent = this.currencySymbol + Math.round(savings).toLocaleString('en-US');
+    if (elNetCost) elNetCost.textContent = this.currencySymbol + Math.round(netCost).toLocaleString('en-US');
 
     if (rawAmount > 0) {
       const savingsPct = Math.round((savings / rawAmount) * 100);
@@ -96,18 +108,36 @@ class LoanCalculatorEngine {
     tabs.forEach(tab => {
       tab.addEventListener('click', (e) => {
         e.preventDefault();
-        tabs.forEach(t => {
-          t.classList.remove('active', 'border-emerald-500', 'text-emerald-600', 'dark:text-emerald-400');
-          t.classList.add('border-transparent', 'text-slate-500');
-        });
-        tab.classList.add('active', 'border-emerald-500', 'text-emerald-600', 'dark:text-emerald-400');
-        tab.classList.remove('border-transparent', 'text-slate-500');
-
-        this.currentMode = tab.dataset.mode;
-        this.updateModeUI();
-        this.calculate();
+        this.setMode(tab.dataset.mode);
       });
     });
+  }
+
+  setMode(mode) {
+    if (!mode) return;
+    this.currentMode = mode;
+    const tabs = document.querySelectorAll('.calc-mode-tab');
+    tabs.forEach(t => {
+      const isMatch = t.dataset.mode === mode;
+      if (isMatch) {
+        t.classList.add('active', 'border-emerald-500', 'text-emerald-600', 'dark:text-emerald-400');
+        t.classList.remove('border-transparent', 'text-slate-500', 'dark:text-slate-400', 'text-slate-700');
+        if (t.classList.contains('mobile-mode-card')) {
+          t.classList.add('bg-emerald-500/10', 'border-emerald-500', 'border-2');
+          t.classList.remove('bg-white', 'dark:bg-slate-900', 'border-slate-200', 'dark:border-slate-800', 'border');
+        }
+      } else {
+        t.classList.remove('active', 'border-emerald-500', 'text-emerald-600', 'dark:text-emerald-400');
+        t.classList.add('border-transparent', 'text-slate-500');
+        if (t.classList.contains('mobile-mode-card')) {
+          t.classList.add('bg-white', 'dark:bg-slate-900', 'border-slate-200', 'dark:border-slate-800', 'text-slate-700', 'dark:text-slate-300', 'border');
+          t.classList.remove('bg-emerald-500/10', 'border-emerald-500', 'border-2', 'border-transparent');
+        }
+      }
+    });
+
+    this.updateModeUI();
+    this.calculate();
   }
 
   updateModeUI() {
@@ -116,7 +146,16 @@ class LoanCalculatorEngine {
     const affordabilityGroup = document.getElementById('calc-affordability-group');
 
     if (leaseOptions) {
-      leaseOptions.style.display = this.currentMode === 'equipment-lease' ? 'block' : 'none';
+      const isLease = this.currentMode === 'equipment-lease';
+      leaseOptions.style.display = isLease ? 'block' : 'none';
+      const freqCol = document.getElementById('payment-frequency-col');
+      if (freqCol) {
+        if (isLease) {
+          freqCol.className = 'col-span-1';
+        } else {
+          freqCol.className = 'col-span-1 sm:col-span-2';
+        }
+      }
     }
 
     if (affordabilityGroup && loanAmountGroup) {
@@ -237,14 +276,9 @@ class LoanCalculatorEngine {
         }
         window.App?.showToast('Terms Applied!', 'Your calculated parameters were saved to the application wizard.', 'success');
 
-        // Redirect to dashboard application or login
+        // Redirect directly to dashboard application
         setTimeout(() => {
-          const user = window.storage?.getCurrentUser();
-          if (user) {
-            window.location.href = 'dashboard.html#new-application';
-          } else {
-            window.location.href = 'login.html';
-          }
+          window.location.href = 'dashboard.html#new-application';
         }, 800);
       });
     }
@@ -254,7 +288,7 @@ class LoanCalculatorEngine {
     if (saveBtn) {
       saveBtn.addEventListener('click', () => {
         const data = this.getCalculationData();
-        const titlePrompt = prompt('Enter a title for this financing scenario:', `${data.modeName} - $${data.financedAmount.toLocaleString()}`);
+        const titlePrompt = prompt('Enter a title for this financing scenario:', `${data.modeName} - $${data.financedAmount.toLocaleString('en-US')}`);
         if (titlePrompt) {
           if (window.storage) {
             window.storage.saveCalculation({
@@ -297,6 +331,55 @@ class LoanCalculatorEngine {
       resetBtn.addEventListener('click', () => {
         this.resetDefaults();
       });
+    }
+
+    // Amortization Schedule Table Horizontal Scroll Controls
+    const tableContainer = document.getElementById('amortization-table-container');
+    const scrollLeftButtons = [
+      document.getElementById('table-scroll-left-btn'),
+      document.getElementById('table-scroll-left-top')
+    ];
+    const scrollRightButtons = [
+      document.getElementById('table-scroll-right-btn'),
+      document.getElementById('table-scroll-right-top')
+    ];
+
+    const updateTableScrollState = () => {
+      if (!tableContainer) return;
+      const canScrollLeft = tableContainer.scrollLeft > 8;
+      const canScrollRight = tableContainer.scrollLeft < (tableContainer.scrollWidth - tableContainer.clientWidth - 8);
+
+      scrollLeftButtons.forEach(btn => {
+        if (btn) btn.disabled = !canScrollLeft;
+      });
+      scrollRightButtons.forEach(btn => {
+        if (btn) btn.disabled = !canScrollRight;
+      });
+    };
+
+    if (tableContainer) {
+      scrollLeftButtons.forEach(btn => {
+        if (btn) {
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            tableContainer.scrollBy({ left: -240, behavior: 'smooth' });
+          });
+        }
+      });
+
+      scrollRightButtons.forEach(btn => {
+        if (btn) {
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            tableContainer.scrollBy({ left: 240, behavior: 'smooth' });
+          });
+        }
+      });
+
+      tableContainer.addEventListener('scroll', updateTableScrollState, { passive: true });
+      window.addEventListener('resize', updateTableScrollState, { passive: true });
+      this.updateTableScrollState = updateTableScrollState;
+      setTimeout(updateTableScrollState, 400);
     }
   }
 
@@ -425,10 +508,10 @@ class LoanCalculatorEngine {
     const elFreqLabel = document.getElementById('calc-output-freq-label');
 
     if (elPayment) elPayment.textContent = this.currencySymbol + data.periodicPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    if (elInterest) elInterest.textContent = this.currencySymbol + Math.round(data.totalInterest).toLocaleString();
-    if (elTotalCost) elTotalCost.textContent = this.currencySymbol + Math.round(data.totalCost).toLocaleString();
+    if (elInterest) elInterest.textContent = this.currencySymbol + Math.round(data.totalInterest).toLocaleString('en-US');
+    if (elTotalCost) elTotalCost.textContent = this.currencySymbol + Math.round(data.totalCost).toLocaleString('en-US');
     if (elLTC) elLTC.textContent = data.ltcPercentage + '%';
-    if (elFinanced) elFinanced.textContent = this.currencySymbol + Math.round(data.financedAmount).toLocaleString();
+    if (elFinanced) elFinanced.textContent = this.currencySymbol + Math.round(data.financedAmount).toLocaleString('en-US');
     if (elFreqLabel) elFreqLabel.textContent = `per ${data.frequency.toLowerCase().replace('-weekly', ' 2-weeks')}`;
 
     // Render Charts
@@ -497,7 +580,7 @@ class LoanCalculatorEngine {
             },
             tooltip: {
               callbacks: {
-                label: (ctx) => `${ctx.dataset.label}: ${this.currencySymbol}${Math.round(ctx.parsed.y).toLocaleString()}`
+                label: (ctx) => `${ctx.dataset.label}: ${this.currencySymbol}${Math.round(ctx.parsed.y).toLocaleString('en-US')}`
               }
             }
           },
@@ -549,7 +632,7 @@ class LoanCalculatorEngine {
             },
             tooltip: {
               callbacks: {
-                label: (ctx) => `${ctx.label}: ${this.currencySymbol}${Math.round(ctx.parsed).toLocaleString()}`
+                label: (ctx) => `${ctx.label}: ${this.currencySymbol}${Math.round(ctx.parsed).toLocaleString('en-US')}`
               }
             }
           }
@@ -628,11 +711,11 @@ class LoanCalculatorEngine {
         rowsHTML += `
           <tr class="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
             <td class="py-3 px-4 font-semibold text-slate-800 dark:text-slate-200">Year ${item.year}</td>
-            <td class="py-3 px-4 text-right font-tabular text-slate-700 dark:text-slate-300">${this.currencySymbol}${Math.round(item.totalPayment).toLocaleString()}</td>
-            <td class="py-3 px-4 text-right font-tabular text-emerald-600 dark:text-emerald-400 font-medium">${this.currencySymbol}${Math.round(item.totalPrincipal).toLocaleString()}</td>
-            <td class="py-3 px-4 text-right font-tabular text-amber-600 dark:text-amber-400">${this.currencySymbol}${Math.round(item.totalInterest).toLocaleString()}</td>
-            <td class="py-3 px-4 text-right font-tabular text-slate-500">${this.currencySymbol}${Math.round(item.cumulativeInterest).toLocaleString()}</td>
-            <td class="py-3 px-4 text-right font-tabular font-semibold text-slate-900 dark:text-slate-100">${this.currencySymbol}${Math.round(item.remainingBalance).toLocaleString()}</td>
+            <td class="py-3 px-4 text-right font-tabular text-slate-700 dark:text-slate-300">${this.currencySymbol}${Math.round(item.totalPayment).toLocaleString('en-US')}</td>
+            <td class="py-3 px-4 text-right font-tabular text-emerald-600 dark:text-emerald-400 font-medium">${this.currencySymbol}${Math.round(item.totalPrincipal).toLocaleString('en-US')}</td>
+            <td class="py-3 px-4 text-right font-tabular text-amber-600 dark:text-amber-400">${this.currencySymbol}${Math.round(item.totalInterest).toLocaleString('en-US')}</td>
+            <td class="py-3 px-4 text-right font-tabular text-slate-500">${this.currencySymbol}${Math.round(item.cumulativeInterest).toLocaleString('en-US')}</td>
+            <td class="py-3 px-4 text-right font-tabular font-semibold text-slate-900 dark:text-slate-100">${this.currencySymbol}${Math.round(item.remainingBalance).toLocaleString('en-US')}</td>
           </tr>
         `;
       });
@@ -645,14 +728,17 @@ class LoanCalculatorEngine {
             <td class="py-2.5 px-4 text-right font-tabular text-slate-700 dark:text-slate-300">${this.currencySymbol}${item.payment.toFixed(2)}</td>
             <td class="py-2.5 px-4 text-right font-tabular text-emerald-600 dark:text-emerald-400">${this.currencySymbol}${item.principal.toFixed(2)}</td>
             <td class="py-2.5 px-4 text-right font-tabular text-amber-600 dark:text-amber-400">${this.currencySymbol}${item.interest.toFixed(2)}</td>
-            <td class="py-2.5 px-4 text-right font-tabular text-slate-500">${this.currencySymbol}${Math.round(item.cumulativeInterest).toLocaleString()}</td>
-            <td class="py-2.5 px-4 text-right font-tabular font-semibold text-slate-900 dark:text-slate-100">${this.currencySymbol}${Math.round(item.remainingBalance).toLocaleString()}</td>
+            <td class="py-2.5 px-4 text-right font-tabular text-slate-500">${this.currencySymbol}${Math.round(item.cumulativeInterest).toLocaleString('en-US')}</td>
+            <td class="py-2.5 px-4 text-right font-tabular font-semibold text-slate-900 dark:text-slate-100">${this.currencySymbol}${Math.round(item.remainingBalance).toLocaleString('en-US')}</td>
           </tr>
         `;
       });
     }
 
     tableBody.innerHTML = rowsHTML;
+    if (typeof this.updateTableScrollState === 'function') {
+      setTimeout(() => this.updateTableScrollState(), 50);
+    }
   }
 
   openCompareModal() {
@@ -674,12 +760,12 @@ class LoanCalculatorEngine {
             <div class="text-xs uppercase font-bold tracking-wider text-emerald-600 dark:text-emerald-400 mb-1">${sc.type}</div>
             <h4 class="font-bold text-base text-slate-900 dark:text-white mb-3">${sc.title}</h4>
             <div class="space-y-2.5 text-sm border-t border-slate-200 dark:border-slate-800 pt-3">
-              <div class="flex justify-between"><span class="text-slate-500">Loan Amount:</span> <span class="font-semibold">${this.currencySymbol}${sc.loanAmount.toLocaleString()}</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Loan Amount:</span> <span class="font-semibold">${this.currencySymbol}${sc.loanAmount.toLocaleString('en-US')}</span></div>
               <div class="flex justify-between"><span class="text-slate-500">APR Rate:</span> <span class="font-semibold">${sc.apr}%</span></div>
               <div class="flex justify-between"><span class="text-slate-500">Term:</span> <span class="font-semibold">${sc.termMonths} Months</span></div>
-              <div class="flex justify-between"><span class="text-slate-500">Payment:</span> <span class="font-bold text-emerald-600 dark:text-emerald-400">${this.currencySymbol}${sc.monthlyPayment.toLocaleString()}/mo</span></div>
-              <div class="flex justify-between"><span class="text-slate-500">Total Interest:</span> <span class="font-semibold">${this.currencySymbol}${sc.totalInterest.toLocaleString()}</span></div>
-              <div class="flex justify-between"><span class="text-slate-500">Total Cost:</span> <span class="font-semibold">${this.currencySymbol}${sc.totalCost.toLocaleString()}</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Payment:</span> <span class="font-bold text-emerald-600 dark:text-emerald-400">${this.currencySymbol}${sc.monthlyPayment.toLocaleString('en-US')}/mo</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Total Interest:</span> <span class="font-semibold">${this.currencySymbol}${sc.totalInterest.toLocaleString('en-US')}</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Total Cost:</span> <span class="font-semibold">${this.currencySymbol}${sc.totalCost.toLocaleString('en-US')}</span></div>
             </div>
           </div>
         `;

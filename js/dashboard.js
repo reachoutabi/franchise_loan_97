@@ -1,5 +1,5 @@
 /**
- * EquiFund Capital - Business Client Dashboard Engine
+ * EquiCapital - Business Client Dashboard Engine
  * Multi-View Routing, Wizard, Approval Tracker Drawer, Document Upload, Offers & Messaging
  */
 
@@ -39,21 +39,22 @@ class DashboardController {
   }
 
   checkSession() {
-    const user = window.storage?.getCurrentUser();
-    if (!user) {
-      // Redirect to login if unauthenticated
-      window.location.href = 'login.html';
-      return;
-    }
+    const user = window.storage?.getCurrentUser() || {
+      id: 'usr-98102',
+      name: 'Alexander Vance',
+      email: 'user@equicapital.com',
+      businessName: 'Vance Heavy Hauling & Excavation LLC'
+    };
+
     // Populate client profile headers
     const nameEls = document.querySelectorAll('.user-display-name');
-    nameEls.forEach(el => el.textContent = user.name);
+    nameEls.forEach(el => el.textContent = user.name || 'Alexander Vance');
 
     const businessEls = document.querySelectorAll('.user-display-business');
-    businessEls.forEach(el => el.textContent = user.businessName);
+    businessEls.forEach(el => el.textContent = user.businessName || 'EquiCapital Client');
 
     const emailEls = document.querySelectorAll('.user-display-email');
-    emailEls.forEach(el => el.textContent = user.email);
+    emailEls.forEach(el => el.textContent = user.email || 'user@equicapital.com');
   }
 
   initSidebarNavigation() {
@@ -278,8 +279,19 @@ class DashboardController {
 
       if (bName) bName.textContent = b.name;
       if (bTitle) bTitle.textContent = b.title;
-      if (bPhone) bPhone.textContent = b.phone;
-      if (bEmail) bEmail.textContent = b.email;
+      if (bPhone) {
+        bPhone.textContent = b.phone;
+        if (bPhone.tagName === 'A') {
+          bPhone.href = `tel:${b.phone.replace(/[^0-9+]/g, '')}`;
+        }
+      }
+      if (bEmail) {
+        bEmail.textContent = b.email;
+        if (bEmail.tagName === 'A') {
+          bEmail.href = `mailto:${b.email}`;
+          bEmail.title = b.email;
+        }
+      }
       if (bAvatar) bAvatar.src = b.avatar;
     }
   }
@@ -297,16 +309,16 @@ class DashboardController {
     ];
 
     let stepperHTML = `
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
-        <div>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
+        <div class="min-w-0 flex-1">
           <span class="text-xs uppercase font-bold text-emerald-600 dark:text-emerald-400 tracking-wider">Primary Application Tracking</span>
-          <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-0.5">${app.id} &mdash; ${app.equipmentDescription}</h3>
-          <p class="text-sm text-slate-500 mt-1">Requested: <strong class="text-slate-800 dark:text-slate-200 font-tabular">$${app.amount.toLocaleString()}</strong> &bull; Submitted: ${app.submittedDate}</p>
+          <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-0.5 truncate" title="${app.id} &mdash; ${app.equipmentDescription}">${app.id} &mdash; ${app.equipmentDescription}</h3>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1 truncate">Requested: <strong class="text-slate-800 dark:text-slate-200 font-tabular">$${app.amount.toLocaleString('en-US')}</strong> &bull; Submitted: ${app.submittedDate}</p>
         </div>
-        <div class="flex items-center gap-3">
-          <span class="px-3.5 py-1.5 rounded-full text-xs font-bold ${this.getStatusBadgeClass(app.status)}">${app.status}</span>
-          <button class="btn-secondary text-xs py-2 px-3.5" onclick="dashboard.openApplicationDrawer('${app.id}')">
-            <i class="bi bi-box-arrow-up-right"></i> View File & Tracker
+        <div class="flex items-center gap-2.5 sm:gap-3 shrink-0 self-start sm:self-center flex-wrap sm:flex-nowrap">
+          <span class="px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 inline-flex items-center justify-center ${this.getStatusBadgeClass(app.status)}">${app.status}</span>
+          <button class="btn-secondary text-xs py-2 px-3.5 whitespace-nowrap shrink-0 inline-flex items-center gap-1.5 shadow-sm" onclick="dashboard.openApplicationDrawer('${app.id}')">
+            <i class="bi bi-box-arrow-up-right text-[11px]"></i> <span>View File &amp; Tracker</span>
           </button>
         </div>
       </div>
@@ -321,7 +333,7 @@ class DashboardController {
 
       stepperHTML += `
         <div class="flex flex-col items-center text-center p-3 rounded-xl border ${isCurrent ? 'border-emerald-500 bg-emerald-500/10' : (isPast ? 'border-emerald-200 dark:border-emerald-950/60 bg-slate-50 dark:bg-slate-900/40' : 'border-slate-200 dark:border-slate-800 opacity-60')}">
-          <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mb-2 ${isCurrent ? 'bg-emerald-500 text-white shadow-glow' : (isPast ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300')}">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mb-2 transition-all ${isCurrent ? 'bg-emerald-500 text-white shadow-glow stepper-stage-current ring-4 ring-emerald-500/25' : (isPast ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300')}">
             ${isPast ? '<i class="bi bi-check-lg"></i>' : st.num}
           </div>
           <span class="text-xs font-bold text-slate-800 dark:text-slate-200">${st.name}</span>
@@ -427,6 +439,7 @@ class DashboardController {
 
     // Populate draft if exists
     this.resetWizardIfDraft();
+    this.setWizardStep(1, 'none');
   }
 
   resetWizardIfDraft() {
@@ -444,29 +457,102 @@ class DashboardController {
     }
   }
 
-  setWizardStep(step) {
+  setWizardStep(step, direction = null) {
+    const prevStep = this.wizardStep || 1;
+    if (!direction) {
+      direction = step > prevStep ? 'forward' : (step < prevStep ? 'backward' : 'none');
+    }
     this.wizardStep = step;
+    if (!this.maxReachedStep || step > this.maxReachedStep) {
+      this.maxReachedStep = step;
+    }
 
-    // Update step indicator
+    // Update Progress Pill
+    const percent = Math.round((step / 6) * 100);
+    const pill = document.getElementById('wizard-progress-pill');
+    if (pill) {
+      pill.innerHTML = `Step ${step} of 6 &bull; ${percent}% Complete`;
+    }
+
+    // Update step indicator nodes, labels, and connector lines
     for (let i = 1; i <= 6; i++) {
       const stepEl = document.getElementById(`wizard-step-node-${i}`);
+      const labelEl = document.getElementById(`wizard-step-label-${i}`);
+      const itemEl = document.getElementById(`wizard-step-item-${i}`);
       const formEl = document.getElementById(`wizard-form-step-${i}`);
 
       if (stepEl) {
+        // Clear transient animation classes
+        stepEl.classList.remove('just-completed', 'animate-node-activate', 'is-active', 'is-completed');
+
         if (i < step) {
-          stepEl.className = 'w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-emerald-500 text-white';
-          stepEl.innerHTML = '<i class="bi bi-check-lg text-sm"></i>';
+          // Completed step
+          const wasJustCompleted = (i === prevStep && direction === 'forward');
+          stepEl.className = 'wizard-node w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-emerald-500 text-white shadow-sm is-completed';
+          if (wasJustCompleted) {
+            stepEl.classList.add('just-completed');
+          }
+          stepEl.innerHTML = '<i class="bi bi-check-lg text-sm wizard-node-check"></i>';
+
+          if (labelEl) {
+            labelEl.className = 'wizard-label text-xs font-bold text-slate-700 dark:text-slate-200 transition-colors is-completed';
+          }
+          if (itemEl) {
+            itemEl.classList.add('is-clickable');
+            itemEl.title = `Step ${i}: Completed (Click to review)`;
+          }
         } else if (i === step) {
-          stepEl.className = 'w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-emerald-500 text-white shadow-glow ring-4 ring-emerald-500/20';
+          // Active step
+          stepEl.className = 'wizard-node w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-emerald-500 text-white shadow-glow is-active';
+          if (direction === 'forward' || direction === 'backward') {
+            stepEl.classList.add('animate-node-activate');
+          }
           stepEl.innerHTML = i;
+
+          if (labelEl) {
+            labelEl.className = 'wizard-label text-xs font-extrabold text-slate-900 dark:text-white is-active transition-colors';
+          }
+          if (itemEl) {
+            itemEl.classList.add('is-clickable');
+            itemEl.title = `Current Step ${i}`;
+          }
         } else {
-          stepEl.className = 'w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
+          // Upcoming step
+          stepEl.className = 'wizard-node w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs bg-slate-200 dark:bg-slate-700 text-slate-500';
           stepEl.innerHTML = i;
+
+          if (labelEl) {
+            labelEl.className = 'wizard-label text-xs font-bold text-slate-400 dark:text-slate-500 transition-colors';
+          }
+          if (itemEl) {
+            const isClickable = i <= this.maxReachedStep;
+            itemEl.classList.toggle('is-clickable', isClickable);
+            itemEl.title = isClickable ? `Jump to Step ${i}` : `Step ${i} (Complete prior steps)`;
+          }
         }
       }
 
+      // Update connector line i (line between node i and node i+1)
+      if (i < 6) {
+        const lineFill = document.getElementById(`wizard-step-line-${i}`);
+        if (lineFill) {
+          lineFill.style.width = i < step ? '100%' : '0%';
+        }
+      }
+
+      // Smooth panel switching with slide & fade
       if (formEl) {
-        formEl.classList.toggle('hidden', i !== step);
+        formEl.classList.remove('panel-slide-forward', 'panel-slide-backward');
+        if (i === step) {
+          formEl.classList.remove('hidden');
+          if (direction === 'forward') {
+            formEl.classList.add('panel-slide-forward');
+          } else if (direction === 'backward') {
+            formEl.classList.add('panel-slide-backward');
+          }
+        } else {
+          formEl.classList.add('hidden');
+        }
       }
     }
 
@@ -481,11 +567,26 @@ class DashboardController {
     if (nextBtn) {
       if (step === 6) {
         nextBtn.innerHTML = '<i class="bi bi-send-check-fill"></i> Submit Commercial Application';
-        nextBtn.className = 'btn-primary px-8';
+        nextBtn.className = 'btn-primary px-8 shadow-glow';
         this.renderWizardReview();
       } else {
         nextBtn.innerHTML = 'Continue Step <i class="bi bi-arrow-right"></i>';
-        nextBtn.className = 'btn-primary';
+        nextBtn.className = 'btn-primary shadow-glow';
+      }
+    }
+  }
+
+  jumpToWizardStep(targetStep) {
+    if (targetStep === this.wizardStep) return;
+    if (targetStep < this.wizardStep) {
+      this.setWizardStep(targetStep, 'backward');
+    } else {
+      if (targetStep <= (this.maxReachedStep || 1)) {
+        this.setWizardStep(targetStep, 'forward');
+      } else {
+        if (!this.validateWizardStep(this.wizardStep)) return;
+        this.collectWizardStepData(this.wizardStep);
+        this.setWizardStep(targetStep, 'forward');
       }
     }
   }
@@ -497,13 +598,13 @@ class DashboardController {
     if (this.wizardStep === 6) {
       this.submitWizardApplication();
     } else {
-      this.setWizardStep(this.wizardStep + 1);
+      this.setWizardStep(this.wizardStep + 1, 'forward');
     }
   }
 
   handleWizardBack() {
     if (this.wizardStep > 1) {
-      this.setWizardStep(this.wizardStep - 1);
+      this.setWizardStep(this.wizardStep - 1, 'backward');
     }
   }
 
@@ -582,9 +683,9 @@ class DashboardController {
             <button class="text-xs text-emerald-600 font-semibold" onclick="dashboard.setWizardStep(1)">Edit</button>
           </div>
           <div><span class="text-slate-500">Financing Type:</span> <strong class="text-slate-900 dark:text-white">${d.financingType}</strong></div>
-          <div><span class="text-slate-500">Requested Amount:</span> <strong class="text-emerald-600 dark:text-emerald-400 font-tabular font-bold">$${(d.amount || 0).toLocaleString()}</strong></div>
+          <div><span class="text-slate-500">Requested Amount:</span> <strong class="text-emerald-600 dark:text-emerald-400 font-tabular font-bold">$${(d.amount || 0).toLocaleString('en-US')}</strong></div>
           <div><span class="text-slate-500">Target Term:</span> <strong class="text-slate-900 dark:text-white">${d.termMonths || 60} Months</strong></div>
-          <div><span class="text-slate-500">Down Payment:</span> <strong class="text-slate-900 dark:text-white">$${(d.downPayment || 0).toLocaleString()}</strong></div>
+          <div><span class="text-slate-500">Down Payment:</span> <strong class="text-slate-900 dark:text-white">$${(d.downPayment || 0).toLocaleString('en-US')}</strong></div>
         </div>
 
         <div class="space-y-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
@@ -626,7 +727,7 @@ class DashboardController {
     if (newApp) {
       window.App?.showToast(
         'Application Submitted!',
-        `Your commercial financing request ${newApp.id} for $${newApp.amount.toLocaleString()} is now active.`,
+        `Your commercial financing request ${newApp.id} for $${newApp.amount.toLocaleString('en-US')} is now active.`,
         'success'
       );
 
@@ -637,7 +738,7 @@ class DashboardController {
       const confAmt = document.getElementById('conf-app-amount');
 
       if (confId) confId.textContent = newApp.id;
-      if (confAmt) confAmt.textContent = '$' + newApp.amount.toLocaleString();
+      if (confAmt) confAmt.textContent = '$' + newApp.amount.toLocaleString('en-US');
 
       wizardBox?.classList.add('hidden');
       confirmationBox?.classList.remove('hidden');
@@ -706,7 +807,7 @@ class DashboardController {
           <div class="font-semibold text-slate-800 dark:text-slate-200 text-sm">${app.financingType}</div>
           <div class="text-xs text-slate-400 truncate max-w-xs">${app.equipmentDescription}</div>
         </td>
-        <td class="py-4 px-4 font-bold text-slate-900 dark:text-white font-tabular">$${app.amount.toLocaleString()}</td>
+        <td class="py-4 px-4 font-bold text-slate-900 dark:text-white font-tabular">$${app.amount.toLocaleString('en-US')}</td>
         <td class="py-4 px-4 text-xs text-slate-500 font-tabular">${app.submittedDate}</td>
         <td class="py-4 px-4">
           <div class="flex items-center gap-1.5">
@@ -717,7 +818,7 @@ class DashboardController {
           </div>
         </td>
         <td class="py-4 px-4">
-          <span class="px-2.5 py-1 rounded-full text-xs font-bold ${this.getStatusBadgeClass(app.status)}">${app.status}</span>
+          <span class="px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap shrink-0 inline-flex items-center justify-center ${this.getStatusBadgeClass(app.status)}">${app.status}</span>
         </td>
         <td class="py-4 px-4 text-right">
           <div class="flex items-center justify-end gap-2">
@@ -767,7 +868,7 @@ class DashboardController {
 
       stagesHTML += `
         <div class="flex items-start gap-3.5">
-          <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-xs ${isCurrent ? 'bg-emerald-500 text-white shadow-glow' : (isPast ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-500')}">
+          <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-xs transition-all ${isCurrent ? 'bg-emerald-500 text-white shadow-glow stepper-stage-current ring-4 ring-emerald-500/25' : (isPast ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-500')}">
             ${isPast ? '<i class="bi bi-check-lg text-sm"></i>' : st.num}
           </div>
           <div class="flex-1 pb-4 ${idx < 4 ? 'border-b border-slate-100 dark:border-slate-800' : ''}">
@@ -790,18 +891,18 @@ class DashboardController {
               <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Application File</span>
               <h2 class="text-xl font-bold text-slate-900 dark:text-white">${app.id}</h2>
             </div>
-            <span class="px-3 py-1 rounded-full text-xs font-bold ${this.getStatusBadgeClass(app.status)}">${app.status}</span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap shrink-0 inline-flex items-center justify-center ${this.getStatusBadgeClass(app.status)}">${app.status}</span>
           </div>
 
           <!-- Quick Metrics -->
           <div class="grid grid-cols-2 gap-3 my-5">
             <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
               <span class="text-xs text-slate-500">Financed Amount</span>
-              <div class="text-lg font-bold text-slate-900 dark:text-white font-tabular mt-0.5">$${app.amount.toLocaleString()}</div>
+              <div class="text-lg font-bold text-slate-900 dark:text-white font-tabular mt-0.5">$${app.amount.toLocaleString('en-US')}</div>
             </div>
             <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
               <span class="text-xs text-slate-500">Estimated Monthly</span>
-              <div class="text-lg font-bold text-emerald-600 dark:text-emerald-400 font-tabular mt-0.5">$${app.monthlyPayment.toLocaleString()}/mo</div>
+              <div class="text-lg font-bold text-emerald-600 dark:text-emerald-400 font-tabular mt-0.5">$${app.monthlyPayment.toLocaleString('en-US')}/mo</div>
             </div>
           </div>
 
@@ -816,7 +917,7 @@ class DashboardController {
             <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400 mb-3">Facility Specifications</h4>
             <div class="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800"><span class="text-slate-500">Asset:</span> <span class="font-semibold text-slate-800 dark:text-slate-200">${app.equipmentDescription}</span></div>
             <div class="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800"><span class="text-slate-500">Equipment Vendor:</span> <span class="font-semibold text-slate-800 dark:text-slate-200">${app.vendorName}</span></div>
-            <div class="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800"><span class="text-slate-500">Down Payment:</span> <span class="font-semibold text-slate-800 dark:text-slate-200">$${app.downPayment.toLocaleString()}</span></div>
+            <div class="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800"><span class="text-slate-500">Down Payment:</span> <span class="font-semibold text-slate-800 dark:text-slate-200">$${app.downPayment.toLocaleString('en-US')}</span></div>
             <div class="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800"><span class="text-slate-500">Term:</span> <span class="font-semibold text-slate-800 dark:text-slate-200">${app.termMonths} Months</span></div>
             <div class="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800"><span class="text-slate-500">Estimated Rate:</span> <span class="font-semibold text-emerald-600 dark:text-emerald-400">${app.rateEstimate}</span></div>
           </div>
@@ -1073,18 +1174,18 @@ class DashboardController {
               <span class="text-xs uppercase font-bold tracking-wider text-emerald-600 dark:text-emerald-400">Application ${o.applicationId}</span>
               <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-0.5">${o.lenderName}</h3>
             </div>
-            <span class="px-3 py-1 rounded-full text-xs font-bold ${o.status === 'Accepted' ? 'badge-growth' : (o.status === 'Declined' ? 'bg-rose-100 text-rose-700' : 'badge-blue')}">${o.status}</span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap shrink-0 inline-flex items-center justify-center ${o.status === 'Accepted' ? 'badge-growth' : (o.status === 'Declined' ? 'bg-rose-100 text-rose-700' : 'badge-blue')}">${o.status}</span>
           </div>
 
           <!-- Highlight Figures -->
           <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 mb-5">
             <div class="flex justify-between items-baseline mb-2">
               <span class="text-xs text-slate-500">Approved Facility:</span>
-              <span class="text-2xl font-extrabold text-slate-900 dark:text-white font-tabular">$${o.amount.toLocaleString()}</span>
+              <span class="text-2xl font-extrabold text-slate-900 dark:text-white font-tabular">$${o.amount.toLocaleString('en-US')}</span>
             </div>
             <div class="flex justify-between items-baseline">
               <span class="text-xs text-slate-500">Monthly Payment:</span>
-              <span class="text-lg font-bold text-emerald-600 dark:text-emerald-400 font-tabular">$${o.monthlyPayment.toLocaleString()}/mo</span>
+              <span class="text-lg font-bold text-emerald-600 dark:text-emerald-400 font-tabular">$${o.monthlyPayment.toLocaleString('en-US')}/mo</span>
             </div>
           </div>
 
@@ -1120,7 +1221,7 @@ class DashboardController {
   }
 
   acceptOfferAction(offerId) {
-    if (confirm('Accept this term sheet and instruct EquiFund to dispatch closing contracts?')) {
+    if (confirm('Accept this term sheet and instruct EquiCapital to dispatch closing contracts?')) {
       window.storage?.acceptOffer(offerId);
       window.App?.showToast('Financing Offer Accepted!', 'Your advisor has dispatched formal closing documentation.', 'success');
       this.renderOffersView();
@@ -1220,10 +1321,10 @@ class DashboardController {
             </button>
           </div>
           <div class="space-y-2 text-xs border-t border-slate-100 dark:border-slate-800 pt-3">
-            <div class="flex justify-between"><span class="text-slate-500">Loan Amount:</span> <strong class="font-tabular">$${c.loanAmount.toLocaleString()}</strong></div>
+            <div class="flex justify-between"><span class="text-slate-500">Loan Amount:</span> <strong class="font-tabular">$${c.loanAmount.toLocaleString('en-US')}</strong></div>
             <div class="flex justify-between"><span class="text-slate-500">APR Rate:</span> <strong>${c.apr}%</strong></div>
             <div class="flex justify-between"><span class="text-slate-500">Term:</span> <strong>${c.termMonths} Months</strong></div>
-            <div class="flex justify-between"><span class="text-slate-500">Monthly Payment:</span> <strong class="text-emerald-600 dark:text-emerald-400 font-tabular">$${c.monthlyPayment.toLocaleString()}/mo</strong></div>
+            <div class="flex justify-between"><span class="text-slate-500">Monthly Payment:</span> <strong class="text-emerald-600 dark:text-emerald-400 font-tabular">$${c.monthlyPayment.toLocaleString('en-US')}/mo</strong></div>
           </div>
         </div>
         <div class="pt-4 border-t border-slate-100 dark:border-slate-800 mt-4">
@@ -1307,9 +1408,9 @@ class DashboardController {
   }
 
   handleLogout() {
-    if (confirm('Log out of EquiFund client portal?')) {
+    if (confirm('Log out of EquiCapital client portal?')) {
       window.storage?.logout();
-      window.location.href = 'login.html';
+      window.location.href = 'index.html';
     }
   }
 }

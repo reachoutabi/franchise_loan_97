@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Client Portal Login & Registration | EquiFund Capital</title>
-  <meta name="description" content="Secure business client portal for EquiFund. Log in or create an account to manage loan applications, upload documents, and track approvals.">
+  <title>Client Portal Login & Registration | EquiCapital</title>
+  <meta name="description" content="Secure business client portal for EquiCapital. Log in or create an account to manage loan applications, upload documents, and track approvals.">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="favicon.png">
@@ -93,22 +93,22 @@
 <body class="bg-[#FDFBF7] dark:bg-[#090E17] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col justify-between selection:bg-[#2AAECE] selection:text-white">
 
   <!-- Top Utilities Bar -->
-  <header class="py-4 px-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
-    <a href="index.html" class="flex items-center gap-3 group">
-      <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-        <i class="bi bi-shield-check text-xl"></i>
+  <header class="py-3 sm:py-4 px-3 sm:px-6 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+    <a href="index.html" class="flex items-center gap-2 sm:gap-3 group">
+      <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform flex-shrink-0">
+        <i class="bi bi-shield-check text-lg sm:text-xl"></i>
       </div>
       <div>
-        <span class="font-heading text-lg font-bold tracking-tight text-slate-900 dark:text-white block leading-none">
-          EquiFund<span class="text-emerald-500">Capital</span>
+        <span class="font-heading text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white block leading-none">
+          Equi<span class="text-emerald-500">Capital</span>
         </span>
-        <span class="text-[9px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-400 block mt-1">
+        <span class="text-[8px] sm:text-[9px] uppercase font-bold tracking-widest text-slate-500 dark:text-slate-400 block mt-1">
           COMMERCIAL FINANCE BROKER
         </span>
       </div>
     </a>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-1.5 sm:gap-3">
       <button class="theme-toggle-btn p-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300">
         <i class="bi bi-moon-stars-fill theme-toggle-icon"></i>
       </button>
@@ -122,11 +122,27 @@
   </header>
 
   <!-- SPLIT SCREEN PORTAL MAIN -->
-  <main class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-10">
-    <div class="max-w-5xl w-full glass-card rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 grid grid-cols-1 lg:grid-cols-12 min-h-[640px]">
+  <main class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-10 relative overflow-hidden">
+    <!-- Ambient High-Tech Hero Background Effects & Aurora Animations -->
+    <div class="hero-bg-effects" aria-hidden="true">
+      <div class="hero-grid-pattern"></div>
+      <div class="hero-grid-beam"></div>
+      <div class="hero-glow-blob hero-blob-1"></div>
+      <div class="hero-glow-blob hero-blob-2"></div>
+      <div class="hero-particle particle-1"></div>
+      <div class="hero-particle particle-2"></div>
+      <div class="hero-crosshair crosshair-1">+</div>
+    </div>
+
+    <div class="max-w-5xl w-full glass-card rounded-3xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-800 grid grid-cols-1 lg:grid-cols-12 min-h-[640px] relative z-10 hero-card-float">
       
       <!-- LEFT SIDE: FINANCIAL CREDIBILITY & TRUST PILLARS -->
       <div class="lg:col-span-5 bg-slate-900 text-white p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden">
+        <!-- Commercial Banking Tower Hero Background Image -->
+        <div class="absolute inset-0 z-0 pointer-events-none">
+          <img src="images/hero-login-banking.jpg" alt="Commercial Financial Headquarters Tower" class="w-full h-full object-cover object-center opacity-30 mix-blend-luminosity">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/90 to-slate-900/75"></div>
+        </div>
         
         <div class="relative z-10 space-y-6">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-[11px] font-bold uppercase tracking-wider">
@@ -181,34 +197,18 @@
       <!-- RIGHT SIDE: TABBED FORMS (LOGIN / REGISTER / FORGOT) -->
       <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between">
         
-        <!-- Tab Navigation Buttons -->
-        <div class="flex gap-4 border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
-          <button id="tab-btn-login" class="auth-tab-btn active pb-1 text-sm font-bold text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-500">
+        <!-- Auth View Header -->
+        <div class="border-b border-slate-100 dark:border-slate-800 pb-3 sm:pb-4 mb-6">
+          <h2 id="auth-panel-title" class="text-xl sm:text-2xl font-extrabold font-heading text-slate-900 dark:text-white">
             Sign In
-          </button>
-          <button id="tab-btn-register" class="auth-tab-btn pb-1 text-sm font-bold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 border-b-2 border-transparent">
-            Register Business
-          </button>
-          <button id="tab-btn-forgot" class="auth-tab-btn pb-1 text-sm font-bold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 border-b-2 border-transparent">
-            Reset Password
-          </button>
+          </h2>
+          <p id="auth-panel-subtitle" class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Access your commercial financing dashboard and active applications.
+          </p>
         </div>
 
         <!-- 1. LOGIN FORM -->
         <div id="form-container-login" class="auth-form-container space-y-5">
-          
-          <!-- One-Click Demo Credentials Pill -->
-          <div class="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between gap-3">
-            <div>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300 block">Reviewer Demo Access</span>
-              <p class="text-xs text-slate-600 dark:text-slate-300 font-tabular font-semibold">
-                client@equifund-demo.com &bull; Client@123
-              </p>
-            </div>
-            <button id="btn-fill-demo" type="button" class="btn-primary text-xs py-1.5 px-3 whitespace-nowrap shadow-sm">
-              <i class="bi bi-lightning-fill"></i> Autofill Demo
-            </button>
-          </div>
 
           <form id="form-login" class="space-y-4">
             <div>
@@ -219,25 +219,20 @@
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
                   <i class="bi bi-envelope"></i>
                 </span>
-                <input type="email" id="login-email" required placeholder="client@company.com" 
+                <input type="email" id="login-email" required placeholder="user@equicapital.com" 
                        class="form-input text-xs sm:text-sm pl-9 py-2.5">
               </div>
             </div>
 
             <div>
-              <div class="flex justify-between items-center mb-1.5">
-                <label class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                  Password
-                </label>
-                <button type="button" class="text-xs text-emerald-600 font-semibold hover:underline" onclick="switchAuthTab('forgot')">
-                  Forgot Password?
-                </button>
-              </div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                Password
+              </label>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
                   <i class="bi bi-lock"></i>
                 </span>
-                <input type="password" id="login-password" required placeholder="••••••••••••" 
+                <input type="password" id="login-password" required placeholder="•••••••• (1234)" 
                        class="form-input text-xs sm:text-sm pl-9 pr-10 py-2.5">
                 <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600" onclick="togglePasswordVisibility('login-password', this)">
                   <i class="bi bi-eye"></i>
@@ -255,17 +250,30 @@
             <button type="submit" class="btn-primary w-full text-sm py-3 shadow-glow mt-2">
               <i class="bi bi-box-arrow-in-right"></i> Sign In
             </button>
+
+            <!-- Register & Reset Password Links Below Sign In -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-2 text-xs text-slate-600 dark:text-slate-400">
+              <div class="flex items-center gap-1">
+                <span>Don't have an account?</span>
+                <button type="button" class="text-emerald-600 dark:text-emerald-400 font-bold hover:underline" onclick="switchAuthTab('register')">
+                  Register
+                </button>
+              </div>
+              <button type="button" class="text-emerald-600 dark:text-emerald-400 font-bold hover:underline" onclick="switchAuthTab('forgot')">
+                Reset Password
+              </button>
+            </div>
           </form>
 
           <!-- Social Demo OAuth Logins -->
           <div class="pt-4 border-t border-slate-100 dark:border-slate-800 text-center">
             <span class="text-xs text-slate-600 dark:text-slate-400 block mb-3">Or sign in with corporate SSO</span>
             <div class="flex gap-3 justify-center">
-              <button type="button" class="social-demo-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 text-sm flex items-center gap-2" title="Google Workspace SSO">
-                <i class="bi bi-google"></i> <span class="text-xs font-semibold">Google</span>
+              <button id="sso-google-btn" data-provider="Google" type="button" class="social-demo-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 hover:bg-emerald-500/5 transition-all text-sm flex items-center gap-2 cursor-pointer" title="Sign in with Google">
+                <i class="bi bi-google text-red-500"></i> <span class="text-xs font-semibold">Google</span>
               </button>
-              <button type="button" class="social-demo-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 text-sm flex items-center gap-2" title="Microsoft Azure AD">
-                <i class="bi bi-microsoft"></i> <span class="text-xs font-semibold">Microsoft</span>
+              <button id="sso-microsoft-btn" data-provider="Microsoft" type="button" class="social-demo-btn p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-emerald-500 hover:bg-emerald-500/5 transition-all text-sm flex items-center gap-2 cursor-pointer" title="Sign in with Microsoft">
+                <i class="bi bi-microsoft text-blue-500"></i> <span class="text-xs font-semibold">Microsoft</span>
               </button>
             </div>
           </div>
@@ -354,6 +362,13 @@
             <button type="submit" class="btn-primary w-full text-sm py-2.5 shadow-glow mt-2">
               <i class="bi bi-shield-lock"></i> Register Client Account
             </button>
+
+            <div class="text-center pt-2 text-xs text-slate-600 dark:text-slate-400">
+              <span>Already have an account?</span>
+              <button type="button" class="text-emerald-600 dark:text-emerald-400 font-bold hover:underline ml-1" onclick="switchAuthTab('login')">
+                Sign In
+              </button>
+            </div>
           </form>
         </div>
 
@@ -369,7 +384,7 @@
               <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Registered Email Address
               </label>
-              <input type="email" id="forgot-email" required placeholder="client@equifund-demo.com" 
+              <input type="email" id="forgot-email" required placeholder="client@equicapital-demo.com" 
                      class="form-input text-xs sm:text-sm py-2.5">
             </div>
 
@@ -383,16 +398,17 @@
             <p>A recovery email was simulated for your address. Check your inbox to set a new password.</p>
           </div>
 
-          <div class="text-center pt-3">
-            <button type="button" class="text-xs text-emerald-600 dark:text-emerald-400 font-bold hover:underline" onclick="switchAuthTab('login')">
-              &larr; Return to Client Login
+          <div class="text-center pt-3 text-xs text-slate-600 dark:text-slate-400">
+            <span>Remember your password?</span>
+            <button type="button" class="text-emerald-600 dark:text-emerald-400 font-bold hover:underline ml-1" onclick="switchAuthTab('login')">
+              Sign In
             </button>
           </div>
         </div>
 
         <!-- Bottom Security Note -->
         <div class="pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
-          <span>Protected by EquiFund 256-Bit TLS</span>
+          <span>Protected by EquiCapital 256-Bit TLS</span>
           <span>SOC-2 Compliant Storage</span>
         </div>
 
@@ -406,38 +422,32 @@
   <script src="js/app.js"></script>
 
   <script>
-    // Tab Switching Logic
+    // Auth View Switching Logic
     function switchAuthTab(tab) {
       const tabs = ['login', 'register', 'forgot'];
+      const titleEl = document.getElementById('auth-panel-title');
+      const subtitleEl = document.getElementById('auth-panel-subtitle');
+
       tabs.forEach(t => {
-        const btn = document.getElementById(`tab-btn-${t}`);
         const container = document.getElementById(`form-container-${t}`);
         if (t === tab) {
-          btn?.classList.add('text-emerald-600', 'dark:text-emerald-400', 'border-emerald-500');
-          btn?.classList.remove('text-slate-500', 'border-transparent');
           container?.classList.remove('hidden');
         } else {
-          btn?.classList.remove('text-emerald-600', 'dark:text-emerald-400', 'border-emerald-500');
-          btn?.classList.add('text-slate-500', 'border-transparent');
           container?.classList.add('hidden');
         }
       });
-    }
 
-    document.getElementById('tab-btn-login')?.addEventListener('click', () => switchAuthTab('login'));
-    document.getElementById('tab-btn-register')?.addEventListener('click', () => switchAuthTab('register'));
-    document.getElementById('tab-btn-forgot')?.addEventListener('click', () => switchAuthTab('forgot'));
-
-    // Autofill Demo Account
-    document.getElementById('btn-fill-demo')?.addEventListener('click', () => {
-      const emailInput = document.getElementById('login-email');
-      const passInput = document.getElementById('login-password');
-      if (emailInput && passInput) {
-        emailInput.value = 'client@equifund-demo.com';
-        passInput.value = 'Client@123';
-        window.App?.showToast('Demo Credentials Filled', 'Click "Log In to Dashboard" to enter.', 'info');
+      if (tab === 'login') {
+        if (titleEl) titleEl.textContent = 'Sign In';
+        if (subtitleEl) subtitleEl.textContent = 'Access your commercial financing dashboard and active applications.';
+      } else if (tab === 'register') {
+        if (titleEl) titleEl.textContent = 'Register';
+        if (subtitleEl) subtitleEl.textContent = 'Create your commercial borrower profile in minutes.';
+      } else if (tab === 'forgot') {
+        if (titleEl) titleEl.textContent = 'Reset Password';
+        if (subtitleEl) subtitleEl.textContent = 'Enter your registered business email to recover your account.';
       }
-    });
+    }
 
     // Password Visibility Toggle
     function togglePasswordVisibility(inputId, btn) {
@@ -522,7 +532,7 @@
       });
 
       if (res?.success) {
-        window.App?.showToast('Account Created!', `Welcome to EquiFund, ${res.user.name}. Redirecting to Home Page...`, 'success');
+        window.App?.showToast('Account Created!', `Welcome to EquiCapital, ${res.user.name}. Redirecting to Home Page...`, 'success');
         setTimeout(() => {
           window.location.href = 'index.html';
         }, 700);
@@ -539,10 +549,16 @@
       window.App?.showToast('Recovery Link Sent', 'Simulated recovery instructions dispatched.', 'info');
     });
 
-    // Social Demo OAuth Toast
+    // Social SSO Logins (Automatically login as user@equicapital.com and redirect to home page)
     document.querySelectorAll('.social-demo-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        window.App?.showToast('Corporate SSO Demo', 'Single Sign-On is simulated in this preview template. Please use the "Autofill Demo" button.', 'info');
+        const provider = btn.getAttribute('data-provider') || (btn.textContent.includes('Google') ? 'Google' : 'Microsoft');
+        const res = window.storage?.loginWithSSO ? window.storage.loginWithSSO(provider) : window.storage?.login('user@equicapital.com', '1234');
+        const user = res?.user || { email: 'user@equicapital.com' };
+        window.App?.showToast(`${provider} Sign In`, `Signed in as ${user.email}. Redirecting to Home Page...`, 'success');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 600);
       });
     });
 

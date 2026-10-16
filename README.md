@@ -1,6 +1,6 @@
-# EquiFund Capital - Equipment Financing & Commercial Loan Broker HTML Template
+# EquiCapital - Equipment Financing & Commercial Loan Broker HTML Template
 
-**EquiFund Capital** is a premium, fintech-grade, production-ready HTML5 template engineered specifically for **commercial loan brokers, equipment leasing agencies, capital advisory firms, and multi-branch commercial finance companies**.
+**EquiCapital** is a premium, fintech-grade, production-ready HTML5 template engineered specifically for **commercial loan brokers, equipment leasing agencies, capital advisory firms, and multi-branch commercial finance companies**.
 
 Built with an original growth-focused color palette, deep slate obsidian dark mode, RTL layout compatibility, interactive financial calculators powered by Chart.js, and an end-to-end Business Client Dashboard operating seamlessly on frontend LocalStorage.
 
@@ -63,7 +63,7 @@ Built with an original growth-focused color palette, deep slate obsidian dark mo
 
 A pre-seeded demonstration account is configured out-of-the-box:
 
-* **Email:** `client@equifund-demo.com`
+* **Email:** `client@equicapital-demo.com`
 * **Password:** `Client@123`
 * **Applicant:** Alexander Vance (Vance Heavy Hauling & Excavation LLC)
 * **Assigned Broker:** David Vance (Senior Commercial Advisor)
@@ -119,7 +119,7 @@ To restore the original pre-seeded data state at any time, navigate to **Dashboa
 ## 🎨 Customizing Brand, Colors & Fonts
 
 ### 1. Brand Name & Logo
-* Change `"EquiFund Capital"` across the `<title>`, `<header>`, and `<footer>` tags in the HTML files.
+* Change `"EquiCapital"` across the `<title>`, `<header>`, and `<footer>` tags in the HTML files.
 * Update the brand name in `js/storage.js` (`DEMO_USER.assignedBroker.email`).
 
 ### 2. Color Palette

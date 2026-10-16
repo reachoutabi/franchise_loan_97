@@ -1,5 +1,5 @@
 /**
- * EquiFund Capital - Global Core Application Logic
+ * EquiCapital - Global Core Application Logic
  * Themes, RTL, Mobile Menu, Toasts, Modals, Counters & Formatters
  */
 
@@ -89,6 +89,33 @@ const App = {
       }
     });
 
+    const drawer = document.getElementById('mobile-menu-drawer');
+    if (drawer && !drawer.classList.contains('mobile-menu-open')) {
+      const prevTransition = drawer.style.transition;
+      drawer.style.transition = 'none';
+      if (dir === 'rtl') {
+        drawer.classList.remove('translate-x-full');
+        drawer.classList.add('-translate-x-full');
+      } else {
+        drawer.classList.remove('-translate-x-full');
+        drawer.classList.add('translate-x-full');
+      }
+      void drawer.offsetWidth;
+      setTimeout(() => {
+        drawer.style.transition = prevTransition;
+      }, 50);
+    }
+
+    const sidebar = document.getElementById('dashboard-sidebar');
+    if (sidebar) {
+      const prevTrans = sidebar.style.transition;
+      sidebar.style.transition = 'none';
+      void sidebar.offsetWidth;
+      setTimeout(() => {
+        sidebar.style.transition = prevTrans;
+      }, 50);
+    }
+
     this.normalizeBidiPunctuation(dir);
 
     window.dispatchEvent(new CustomEvent('directionChanged', { detail: { dir } }));
@@ -122,7 +149,7 @@ const App = {
     });
 
     // 3. FAQ Accordion headers and answer alignment across directions
-    const faqSummaries = document.querySelectorAll('#home-faq-accordion summary, details.glass-card summary, #home2-faq-accordion button');
+    const faqSummaries = document.querySelectorAll('#home-faq-accordion summary, details.glass-card summary, #home2-faq-accordion button, #contact-faq-accordion button');
     faqSummaries.forEach(summary => {
       const span = summary.querySelector('span');
       const icon = summary.querySelector('i');
@@ -145,7 +172,7 @@ const App = {
       }
     });
 
-    const faqAnswers = document.querySelectorAll('#home-faq-accordion details > div, #home2-faq-accordion .glass-card > div, details.glass-card > div');
+    const faqAnswers = document.querySelectorAll('#home-faq-accordion details > div, #home2-faq-accordion .glass-card > div, details.glass-card > div, #contact-faq-accordion .faq-answer');
     faqAnswers.forEach(answer => {
       if (dir === 'rtl') {
         answer.style.textAlign = 'right';
@@ -157,8 +184,8 @@ const App = {
 
   // Mobile Navigation Drawer
   initMobileNav() {
-    const openBtn = document.getElementById('mobile-menu-btn');
-    const closeBtn = document.getElementById('mobile-menu-close');
+    const openBtn = document.getElementById('mobile-menu-btn') || document.getElementById('mobile-menu-open-btn');
+    const closeBtn = document.getElementById('mobile-menu-close') || document.getElementById('mobile-menu-close-btn');
     const drawer = document.getElementById('mobile-menu-drawer');
     const backdrop = document.getElementById('mobile-menu-backdrop');
 
@@ -166,12 +193,14 @@ const App = {
 
     const openMenu = () => {
       drawer.classList.remove('translate-x-full', '-translate-x-full');
-      backdrop?.classList.remove('hidden');
+      drawer.classList.add('mobile-menu-open');
+      backdrop?.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
       document.body.style.overflow = 'hidden';
     };
 
     const closeMenu = () => {
       const isRtl = document.documentElement.getAttribute('dir') === 'rtl';
+      drawer.classList.remove('mobile-menu-open');
       drawer.classList.add(isRtl ? '-translate-x-full' : 'translate-x-full');
       backdrop?.classList.add('hidden');
       document.body.style.overflow = '';
@@ -329,31 +358,37 @@ const App = {
   // Session-Aware Navbar Buttons
   initSessionNav() {
     const user = window.storage ? window.storage.getCurrentUser() : null;
-    const authLinks = document.querySelectorAll('.auth-nav-link');
 
+    // Dedicated Dashboard Links
+    const dashboardLinks = document.querySelectorAll('.dashboard-nav-link');
+    dashboardLinks.forEach(link => {
+      link.href = 'dashboard.html';
+      link.innerHTML = `Dashboard`;
+      link.title = user && user.name ? `Signed in as ${user.name} - View Dashboard` : 'Client Dashboard';
+    });
+
+    // Sign In Links (Always keep Sign In option accessible)
+    const authLinks = document.querySelectorAll('.auth-nav-link');
     authLinks.forEach(link => {
-      if (user) {
-        link.href = 'dashboard.html';
-        const firstName = user.name ? user.name.split(' ')[0] : 'Client';
-        link.innerHTML = `<i class="bi bi-person-check-fill text-emerald-500"></i> <span>Dashboard (${firstName})</span>`;
-        link.title = `Signed in as ${user.name} - View Dashboard`;
-      } else {
-        link.href = 'login.html';
-        link.innerHTML = `<i class="bi bi-person-circle text-base"></i> <span>Sign In</span>`;
-        link.title = 'Sign In to your Account';
-      }
+      link.href = 'login.html';
+      link.innerHTML = `Sign In`;
+      link.title = 'Sign In to your Account';
     });
 
     const mobileAuthLinks = document.querySelectorAll('.mobile-auth-link');
     mobileAuthLinks.forEach(link => {
-      if (user) {
-        link.href = 'dashboard.html';
-        link.innerHTML = `<i class="bi bi-person-circle text-emerald-500"></i> <span>Dashboard (${user.name ? user.name.split(' ')[0] : 'Account'})</span>`;
-      } else {
-        link.href = 'login.html';
-        link.innerHTML = `<i class="bi bi-person-circle"></i> <span>Sign In</span>`;
-      }
+      link.href = 'login.html';
+      link.innerHTML = `Sign In`;
     });
+  },
+
+  // Newsletter Subscription Form Handler
+  handleNewsletterSubmit(form) {
+    const input = form.querySelector('input[type="email"]');
+    if (!input || !input.value) return;
+    const email = input.value.trim();
+    this.showToast('Subscription Confirmed', `Thank you! ${email} has been subscribed to market intelligence updates.`, 'success');
+    input.value = '';
   },
 
   // Toast System
@@ -428,14 +463,14 @@ const App = {
       });
     });
 
-    // 2. Custom button-based accordions (e.g. home-2.html)
-    const faqButtonContainers = document.querySelectorAll('#home2-faq-accordion, [data-accordion="buttons"]');
+    // 2. Custom button-based accordions (e.g. home-2.html, contact.html)
+    const faqButtonContainers = document.querySelectorAll('#home2-faq-accordion, #contact-faq-accordion, [data-accordion="buttons"]');
     faqButtonContainers.forEach(container => {
-      const cards = container.querySelectorAll('.glass-card');
+      const cards = container.querySelectorAll('.glass-card, .faq-item');
       cards.forEach(card => {
         const btn = card.querySelector('button');
         const answer = card.querySelector('.faq-answer');
-        const icon = card.querySelector('i');
+        const icon = card.querySelector('.faq-chevron, i.bi-chevron-down, button > i:last-child');
 
         if (!btn || !answer) return;
 
@@ -446,15 +481,18 @@ const App = {
           // Close all FAQ items in this container
           cards.forEach(otherCard => {
             const otherAnswer = otherCard.querySelector('.faq-answer');
-            const otherIcon = otherCard.querySelector('i');
+            const otherIcon = otherCard.querySelector('.faq-chevron, i.bi-chevron-down, button > i:last-child');
+            const otherBtn = otherCard.querySelector('button');
             if (otherAnswer) otherAnswer.classList.add('hidden');
             if (otherIcon) otherIcon.classList.remove('rotate-180');
+            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
           });
 
           // If the clicked item was closed, open it now (exclusive single-open)
           if (!isCurrentlyOpen) {
             answer.classList.remove('hidden');
             if (icon) icon.classList.add('rotate-180');
+            btn.setAttribute('aria-expanded', 'true');
           }
         });
       });
